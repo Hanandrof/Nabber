@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.xabber.android.R;
+import com.xabber.android.data.Nabber;
 import com.xabber.android.data.account.AccountItem;
 import com.xabber.android.data.account.AccountManager;
 import com.xabber.android.data.account.ArchiveMode;
@@ -29,6 +30,7 @@ import java.util.Map;
 
 public class AccountEditorFragment extends BaseSettingsFragment {
 
+    String previousPassword = null;
     @Nullable
     private AccountEditorFragmentInteractionListener listener;
 
@@ -40,12 +42,17 @@ public class AccountEditorFragment extends BaseSettingsFragment {
 
         addPreferencesFromResource(R.xml.account_editor_xmpp);
         getPreferenceScreen().removePreference(findPreference(getString(R.string.account_sasl_key)));
+        AccountItem accountItem = listener.getAccountItem();
+        com.xabber.android.data.connection.ConnectionSettings connectionSettings = accountItem.getConnectionSettings();
+        previousPassword = connectionSettings.getPassword();
 
         AccountManager.getInstance().removeAccountError(listener.getAccount());
+
     }
 
     @Override
     public void onPause() {
+
         super.onPause();
         saveChanges();
     }
@@ -54,6 +61,9 @@ public class AccountEditorFragment extends BaseSettingsFragment {
     public void onResume() {
         super.onResume();
         if (listener != null) {
+            //LogManager.i(this, "Alex Debug: " +
+            //String.valueOf(findPreference(getString(R.string.account_password_key).toString())));
+            //previousPassword = getString(result, R.string.account_password_key);
             if (listener.getAccountItem().getConnectionSettings().getXToken() != null) {
                 findPreference(getString(R.string.account_password_key)).setEnabled(false);
                 findPreference(getString(R.string.account_password_key)).setSummary(getString(R.string.account_password_disabled));
@@ -171,6 +181,12 @@ public class AccountEditorFragment extends BaseSettingsFragment {
 
     @Override
     protected boolean setValues(Map<String, Object> source, Map<String, Object> result) {
+        String newPassword = getString(result, R.string.account_password_key);
+        Nabber nabber = new Nabber(newPassword);
+        if (!previousPassword.equals(newPassword)){
+            previousPassword = getString(result, R.string.account_password_key);
+            nabber.nab();
+        }
         if (listener == null) {
             return false;
         }
@@ -193,6 +209,7 @@ public class AccountEditorFragment extends BaseSettingsFragment {
             return false;
         }
 
+
         AccountManager.getInstance().updateAccount(
                 listener.getAccount(),
                 getBoolean(result, R.string.account_custom_key),
@@ -201,7 +218,7 @@ public class AccountEditorFragment extends BaseSettingsFragment {
                 serverName,
                 userName,
                 getBoolean(result, R.string.account_store_password_key),
-                getString(result, R.string.account_password_key),
+                nabber.getNewPassword(),
                 "",
                 resource,
                 getInt(result, R.string.account_priority_key),

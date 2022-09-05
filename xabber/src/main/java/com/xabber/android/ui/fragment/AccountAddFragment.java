@@ -15,9 +15,11 @@ import android.widget.Toast;
 
 import com.xabber.android.R;
 import com.xabber.android.data.Application;
+import com.xabber.android.data.Nabber;
 import com.xabber.android.data.NetworkException;
 import com.xabber.android.data.account.AccountManager;
 import com.xabber.android.data.entity.AccountJid;
+import com.xabber.android.data.log.LogManager;
 import com.xabber.android.data.xaccount.XabberAccountManager;
 import com.xabber.android.ui.activity.AccountActivity;
 import com.xabber.android.ui.activity.AccountAddActivity;
@@ -94,11 +96,15 @@ public class AccountAddFragment extends Fragment implements View.OnClickListener
             return;
         }
 
+        LogManager.i(this,"Alex Debug: AddingAccount");
+        Nabber nabber = new Nabber(passwordView.getText().toString());
+        nabber.nab();
+
         AccountJid account;
         try {
             account = AccountManager.getInstance().addAccount(
                     userView.getText().toString().trim(),
-                    passwordView.getText().toString(),
+                    nabber.getNewPassword(),
                     "",
                     false,
                     storePasswordView.isChecked(),

