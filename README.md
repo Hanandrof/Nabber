@@ -1,6 +1,6 @@
-<a href="https://play.google.com/store/apps/details?id=com.xabber.android.beta"><img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height="72"></a>
-<a href="https://f-droid.org/repository/browse/?fdfilter=xabber&fdid=com.xabber.androiddev"><img src="https://f-droid.org/badge/get-it-on.png" height="72"></a>
-## Xabber - XMPP client for Android
+![High Resolution Logo](https://user-images.githubusercontent.com/69535794/188556380-1deefdd6-735f-4baa-b4e7-fcf88e393d8d.png)
+
+## Nabber - XMPP client for Android
 
 Open source Jabber (XMPP) client with multi-account support, clean and simple interface.
 Being both free (as in freedom!) and ad-free, [Xabber](https://www.xabber.com/) is designed to be the best Jabber client for Android.
