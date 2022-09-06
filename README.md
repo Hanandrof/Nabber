@@ -30,4 +30,3 @@ To build Xabber use **"open"** productFlavour. Another flavour called "store" re
 
 https://user-images.githubusercontent.com/69535794/188558506-619f946f-f680-495e-b059-50fd0295d1a3.mp4
 
-<a href="https://twitter.com/xabber_xmpp">Twitter</a>
