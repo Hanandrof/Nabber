@@ -1,4 +1,4 @@
-![High Resolution Logo](https://user-images.githubusercontent.com/69535794/188556380-1deefdd6-735f-4baa-b4e7-fcf88e393d8d.png)
+![High Resolution Logo](https://user-images.githubusercontent.com/69535794/188556748-5436a231-c387-45b0-92bc-dd09a130d19d.jpg)
 
 ## Nabber - XMPP client for Android
 
